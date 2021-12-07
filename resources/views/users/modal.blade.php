@@ -20,7 +20,7 @@
         <div class="row mt-3">
           <div class="col-sm-6">
             <div class="form-group">
-              <input type="email" name="email" id="email" class="form-control" placeholder="Email">
+              <input type="text" name="email" id="email" class="form-control" placeholder="Username">
             </div>
           </div>
           <div class="col-sm-6">

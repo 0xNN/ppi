@@ -24,7 +24,7 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Nama</th>
-                                        <th>Email</th>
+                                        <th>Username</th>
                                         <th>Dibuat</th>
                                         <th>Aksi</th>
                                     </tr>

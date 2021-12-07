@@ -689,8 +689,8 @@ class RekapController extends Controller
             }
 
             $arr_data[$data->nama_alat_digunakan] = [
-                'jumlah_pasien' => $jumlah_pasien,
-                'jumlah_hari' => $jumlah_hari
+                'jumlah_pasien' => isset($jumlah_pasien) ? $jumlah_pasien: 0,
+                'jumlah_hari' => isset($jumlah_hari) ? $jumlah_hari: 0
             ];
         }
         // dd($arr_data);
