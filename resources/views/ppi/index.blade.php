@@ -13,7 +13,7 @@
             <div class="card bg-secondary shadow">
                 <div class="card-header bg-white border-0">
                     {{-- <div class="text-danger font-italic">{{ __('List Jenis Operasi!') }}</div> --}}
-                    <a href="javascript:void(0)" class="d-sm-inline-block btn btn-sm btn-success shadow-sm" id="tombol-utama">
+                    <a href="{{ route('pasien.index') }}" class="d-sm-inline-block btn btn-sm btn-success shadow-sm" id="tombol-utama">
                       Input PPI <i class="fas fa-plus"></i>
                     </a>
                 </div>
