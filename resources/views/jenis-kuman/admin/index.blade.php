@@ -103,7 +103,7 @@
             $('#button-simpan').val("create-post"); //valuenya menjadi create-post
             $('#id').val(''); //valuenya menjadi kosong
             $('#form-tambah-edit').trigger("reset"); //mereset semua input dll didalamnya
-            $('#modal-judul').html("Tambah Bank"); 
+            $('#modal-judul').html("Tambah"); 
             $('#addUtamaModal').modal('show'); //modal tampil
         });
 

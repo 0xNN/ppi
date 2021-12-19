@@ -43,8 +43,8 @@ class RekapPasienExport implements FromView, WithColumnWidths, WithEvents, Shoul
         ];
 
         $exports = PasienPpi::join('pasien_ppi_details','pasien_ppi_details.pasien_ppi_id','pasien_ppis.id')
-                            ->whereMonth('tgl_masuk', $this->bulan)
-                            ->whereYear('tgl_masuk', $this->tahun)
+                            ->whereMonth('tgl_sensus', $this->bulan)
+                            ->whereYear('tgl_sensus', $this->tahun)
                             ->get();
 
         $model = [

@@ -449,7 +449,8 @@ class RekapController extends Controller
                 );
             }
 
-            return Excel::download(new IdoExport($request->tahun_filter), 'ido.xlsx');
+            $tindakan_operasi = TindakanOperasi::find($request->tindakan_operasi_id)->nama_tindakan_operasi;
+            return Excel::download(new IdoExport($request->tahun_filter, $tindakan_operasi), 'ido.xlsx');
         }
         // $denumerator_hap = $infeksi_rs['hap'];
         // if($denumerator_hap == 'error') {

@@ -1,5 +1,5 @@
-<p>NUMERATOR : Jumlah Infeksi Rumah sakit (Tindakan Operasi)</p>
-<p>DENUMERATOR : Jumlah tindakan operasi (Tindakan Operasi)</p>
+<p>NUMERATOR : Jumlah Infeksi Rumah sakit {{ $tindakan_operasi }}</p>
+<p>DENUMERATOR : Jumlah tindakan operasi {{ $tindakan_operasi }}</p>
 <p>STANDARD : 2%</p>
 <p></p>
 <table>

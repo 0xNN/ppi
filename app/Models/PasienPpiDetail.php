@@ -34,6 +34,7 @@ class PasienPpiDetail extends Model
         'ruang_id',
         'diagnosa',
         'is_operasi',
+        'tgl_operasi',
         'tindakan_operasi_id',
         'jenis_operasi_id',
         'lama_operasi_id',

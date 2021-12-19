@@ -19,6 +19,7 @@ class CreatePasienPpiDetailsTable extends Migration
             $table->integer('ruang_id');
             $table->json('diagnosa'); // [1,2,3]
             $table->tinyInteger('is_operasi')->default(0); // 0 = Tidak Operasi, 1 = Operasi
+            $table->date('tgl_operasi')->nullable();
             $table->integer('tindakan_operasi_id')->nullable();
             $table->integer('jenis_operasi_id')->nullable();
             $table->integer('lama_operasi_id')->nullable();

@@ -12,9 +12,11 @@ use Maatwebsite\Excel\Events\AfterSheet;
 class IdoExport implements FromView, WithColumnWidths, WithEvents
 {
     protected $tahun;
+    protected $tindakan_operasi;
 
-    public function __construct(String $tahun) {
+    public function __construct(String $tahun, String $tindakan_operasi) {
         $this->tahun = $tahun;
+        $this->tindakan_operasi = $tindakan_operasi;
     }
 
     public function view(): View
@@ -25,6 +27,7 @@ class IdoExport implements FromView, WithColumnWidths, WithEvents
 
         return view('exports.ido.index', [
             'ido' => $exports,
+            'tindakan_operasi' => $this->tindakan_operasi,
             'tahun' => $this->tahun
         ]);
     }

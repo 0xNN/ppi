@@ -25,6 +25,7 @@
                                         <th>ID</th>
                                         <th>Nama</th>
                                         <th>Username</th>
+                                        <th>Level</th>
                                         <th>Dibuat</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -74,9 +75,10 @@
             serverSide: true,
             ajax: "{{ route('user.index') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                 {data: 'name', name: 'name'},
                 {data: 'email', name: 'email'},
+                {data: 'role', name: 'role'},
                 {data: 'created_at', name: 'created_at'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ],
@@ -108,16 +110,26 @@
                         type: "POST", //karena simpan kita pakai method POST
                         dataType: 'json', //data tipe kita kirim berupa JSON
                         success: function (data) { //jika berhasil
-                            $('#form-tambah-edit').trigger("reset"); //form reset
-                            $('#addUtamaModal').modal('hide'); //modal hide
-                            $('#tombol-simpan').html('Simpan'); //tombol simpan
-                            var oTable = $('#dt-user-management').dataTable(); //inialisasi datatable
-                            oTable.fnDraw(false); //reset datatable
-                            iziToast.success({ //tampilkan iziToast dengan notif data berhasil disimpan pada posisi kanan bawah
-                                title: 'Successfully',
-                                message: 'Success',
-                                position: 'bottomRight'
-                            });
+                            if(data.code == 201) {
+                                $('#tombol-simpan').html('Simpan');
+                                iziToast.error({ //tampilkan iziToast dengan notif data berhasil disimpan pada posisi kanan bawah
+                                    title: 'Gagal',
+                                    message: data.message,
+                                    position: 'bottomRight'
+                                });
+                            }
+                            if(data.code == 200) {
+                                $('#form-tambah-edit').trigger("reset"); //form reset
+                                $('#addUtamaModal').modal('hide'); //modal hide
+                                $('#tombol-simpan').html('Simpan'); //tombol simpan
+                                var oTable = $('#dt-user-management').dataTable(); //inialisasi datatable
+                                oTable.fnDraw(false); //reset datatable
+                                iziToast.success({ //tampilkan iziToast dengan notif data berhasil disimpan pada posisi kanan bawah
+                                    title: 'Successfully',
+                                    message: 'Success',
+                                    position: 'bottomRight'
+                                });
+                            }
                         },
                         error: function (data) { //jika error tampilkan error pada console
                             console.log('Error:', data);

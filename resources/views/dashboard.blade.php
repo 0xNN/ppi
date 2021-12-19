@@ -278,6 +278,21 @@
                 </div>
             </div>
         </div> --}}
+        @if (auth()->user()->role == 0)
+        <div class="row mt-2">
+            <div class="col-xl-12 col-md-12 col-sm-12">
+                <div class="card shadow">
+                    <div class="card-header">
+                        Selamat data di Sistem Informasi PPI RSUD Siti Fatimah Palembang
+                    </div>
+                    <div class="card-body">
+                        Silahkan lakukan input PPI <a class="btn btn-sm btn-success" href="{{ route('pasien.index') }}">Disini</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+        @if (auth()->user()->role == 1)
         <div class="row mt-2">
             <div class="col-xl-12 col-md-12 col-sm-12">
                 <div class="card shadow">
@@ -295,6 +310,23 @@
                                     </div>
                                 </div>
                             </div>
+                            {{-- <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>Range Bulan</label>
+                                        <div class="input-group input-group-sm">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">Dari</div>
+                                            </div>
+                                            <input type="text" id="from_date" name="from_date" class="form-control" readonly>
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">Sampai</div>
+                                            </div>
+                                            <input type="text" id="to_date" name="to_date" class="form-control form-control-sm" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> --}}
                             {{-- {!! $chartHais->container() !!} --}}
                         </div>
                         <div class="card-footer">
@@ -316,12 +348,14 @@
                 </div>
             </div> --}}
         </div>
+        @endif
         @include('layouts.footers.auth')
     </div>
 @endsection
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets') }}/css/yearpicker.css">
+    <link rel="stylesheet" href="{{ asset('assets') }}/css/jquery.datetimepicker.min.css">
 @endpush
 
 @push('js')
@@ -331,6 +365,7 @@
     <script src="{{ asset('assets') }}/js/yearpicker.js"></script>
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/6.0.6/highcharts.js" charset="utf-8"></script> --}}
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script> --}}
+    <script src="{{ asset('assets') }}/js/jquery.datetimepicker.full.min.js"></script>
     {{-- {!! $chartHais->script() !!}
     {!! $chartJenisOperasi->script() !!} --}}
     <script>
@@ -347,6 +382,27 @@
                     console.log(data.tahun);
                 },
                 dataType: "JSON"
+            });
+        });
+
+        jQuery(function(){
+            jQuery('#from_date').datetimepicker({
+                format:'Y-m-d',
+                onShow:function( ct ){
+                this.setOptions({
+                    maxDate:jQuery('#to_date').val()?jQuery('#to_date').val():false
+                })
+                },
+                timepicker:false
+            });
+            jQuery('#to_date').datetimepicker({
+                format:'Y-m-d',
+                onShow: function( ct ){
+                    this.setOptions({
+                        minDate:jQuery('#from_date').val()?jQuery('#from_date').val():false
+                    })
+                },
+                timepicker:false
             });
         });
     </script>

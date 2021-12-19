@@ -17,6 +17,7 @@ use App\Models\PasienPpi;
 use App\Models\PasienPpiDetail;
 use App\Models\Patient;
 use App\Models\Registration;
+use App\Models\Diagnosa;
 use App\Models\RiskScore;
 use App\Models\Ruang;
 use App\Models\TindakanOperasi;
@@ -166,6 +167,7 @@ class PasienFromOtherDbController extends Controller
             if($request->has('is_operasi')) {
                 if($request->is_operasi == 'ya') {
                     $data['is_operasi'] = 1;
+                    $data['tgl_operasi'] = $request->tgl_operasi;
                     $data['jenis_operasi_id'] = $request->jenis_operasi_id;
                     $data['lama_operasi_id'] = $request->lama_operasi_id;
                     $data['asa_score_id'] = $request->asa_score_id;
@@ -174,6 +176,7 @@ class PasienFromOtherDbController extends Controller
                 }
             } else {
                 $data['is_operasi'] = 0;
+                $data['tgl_operasi'] = null;
                 $data['jenis_operasi_id'] = null;
                 $data['lama_operasi_id'] = null;
                 $data['asa_score_id'] = null;
@@ -780,5 +783,153 @@ class PasienFromOtherDbController extends Controller
     public function get_detail_with_id($id)
     {
         abort(400);
+    }
+
+    public function data_valid(Request $request)
+    {
+        // dd($request->all());
+        if($request->has('konfirmasi')) {
+            return response()->json([
+                'kode' => 200,
+                'message' => 'yes'
+            ],200);
+        }
+        $data = $request->all();
+        // dd($infeksi_rs_lain);
+        $antibiotik_tmp = AntibiotikTmp::where('no_rm', $request->no_rm)->get();
+        $antibiotik = '';
+        if($antibiotik_tmp->isEmpty()) {
+            $antibiotik = null;
+        } else {
+            foreach($antibiotik_tmp as $a) {
+                $antibiotik .= $a->nama_antibiotik.': ';
+                $antibiotik .= $a->kategori == null ? 'Profilaksis dan Terapi': $a->kategori;
+                $antibiotik .= ', ';
+            }
+        }
+
+        $model_kultur = [
+            'darah',
+            'swab_luka',
+            'sputurn',
+            'urine'
+        ];
+
+        $model_infeksi = [
+            'vap',
+            'hap',
+            'isk',
+            'iadp',
+            'ido',
+            'pleb',
+            'tirah_baring'
+        ];
+
+        $model_infeksi_lain = [
+            'vap_lain',
+            'hap_lain',
+            'isk_lain',
+            'iadp_lain',
+            'ido_lain',
+            'pleb_lain'
+        ];
+
+        $infeksi_rs = '';
+        $infeksi_rs_lain = '';
+        $kultur = '';
+        foreach($model_infeksi as $infeksi) {
+            $req = 'jenis_infeksi_rs_'.$infeksi;
+            if($request->has($req)) {
+                if($request->$req !== null && $request->$req !== "____-__-__") {
+                    $infeksi_rs .= str_replace("_"," ",strtoupper($infeksi)).': '.$request->$req.', ';
+                }
+            }
+        }
+
+        foreach($model_infeksi_lain as $infeksi) {
+            $req = 'jenis_infeksi_rs_'.$infeksi;
+            if($request->has($req)) {
+                if($request->$req !== null && $request->$req !== "____-__-__") {
+                    $infeksi_rs_lain .= str_replace("_LAIN","",strtoupper($infeksi)).': '.$request->$req.', ';
+                }
+            }
+        }
+
+        foreach($model_kultur as $mk) {
+            if($request->has($mk)) {
+                $kultur .= str_replace("_"," ", strtoupper($mk)).', ';
+            }
+        }
+
+        if($request->has('transmisi_id')) {
+            $transmisi = Transmisi::find($request->transmisi_id)->nama_transmisi;
+        } else {
+            $transmisi = null;
+        }
+
+        if($request->has('diagnosa')) {
+            $diagnosa = array();
+            foreach($request->diagnosa as $dg) {
+                $d = Diagnosa::where('DiagnosisCode', $dg)->first();
+                array_push($diagnosa, $d->DiagnosisName);
+            }
+        } else {
+            $diagnosa = null;
+        }
+
+        if($request->has('alat_digunakan_id')) {
+            $alat = array();
+            foreach($request->alat_digunakan_id as $id) {
+                $a = AlatDigunakan::find($id);
+                array_push($alat, $a->nama_alat_digunakan);
+            }
+        } else {
+            $alat = null;
+        }
+
+        if($request->has('kegiatan_sensus_id')) {
+            $kegiatan_sensus = KegiatanSensus::find($request->kegiatan_sensus_id)->nama_kegiatan_sensus;
+        } else {
+            $kegiatan_sensus = null;
+        }
+
+        if($request->has('is_operasi')) {
+            $operasi = array();
+            $model_operasi = [
+                'tindakan_operasi_id' => new TindakanOperasi, 
+                'jenis_operasi_id' => new JenisOperasi, 
+                'lama_operasi_id' => new LamaOperasi, 
+                'asa_score_id' => new AsaScore, 
+                'risk_score_id' => new RiskScore,
+            ];
+            foreach($model_operasi as $key => $value) {
+                if($request->has($key)) {
+                    $op = $value::where('id', $request->$key)->first();
+                    $ops = str_replace("id","",str_replace("_"," ", $key));
+                    $fill = 'nama_'.str_replace("_id", "", $key);
+                    $names = ucwords($ops).": ".$op->$fill;
+                    array_push($operasi, $names);
+                }
+            }
+        } else {
+            $operasi = null;
+        }
+
+        $ruang = Ruang::find($request->ruang_id);
+        $table =  view('pasien.admin.table-validasi', compact(
+            'data',
+            'ruang',
+            'diagnosa',
+            'operasi',
+            'alat',
+            'kegiatan_sensus',
+            'infeksi_rs',
+            'infeksi_rs_lain',
+            'kultur',
+            'transmisi',
+            'antibiotik'
+        ))->render();
+
+        return response()->json(array('success' => true, 'table' => $table));
     }
 }

@@ -104,6 +104,7 @@
                         </li>
                     </ul>
                 </div>
+                @if (auth()->user()->role == 1)
                 <div class="collapse show" id="navbar-master-pasien">
                     <ul class="nav nav-sm flex-column">
                         <li class="nav-item">
@@ -113,8 +114,19 @@
                         </li>
                     </ul>
                 </div>
+                <div class="collapse show" id="navbar-master-pasien">
+                    <ul class="nav nav-sm flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('data-ppi.index') }}">
+                                {{ __('Data PPI') }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                @endif
             </ul>
             {{-- <h6 class="navbar-heading text-muted">Master</h6> --}}
+            @if (auth()->user()->role == 1)
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link active" href="#navbar-master-lain" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-master-lain">
@@ -187,6 +199,7 @@
                     </ul>
                 </div>
             </ul>
+            @endif
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link active" href="#navbar-user" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-user">
@@ -200,11 +213,13 @@
                                     {{ __('User profile') }}
                                 </a>
                             </li>
+                            @if (auth()->user()->role == 1)
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('user.index') }}">
                                     {{ __('User Management') }}
                                 </a>
                             </li>
+                            @endif
                         </ul>
                     </div>
                 </li>

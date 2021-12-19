@@ -7,6 +7,7 @@
       'class' => 'col-lg-12'
   ])
   @include('pasien.admin.modal')
+  @include('pasien.admin.modal-validasi')
   <div class="container-fluid mt--7">
     <div class="row">
         <div class="col-xl-4 order-xl-1">
@@ -57,62 +58,108 @@
         searching: false,
         bInfo: false
       });
+      $('#tombol-simpan').prop('disabled', true);
+      $('#validasi-simpan').click(function() {
+        var form = $('#form-tambah-edit')[0];
+        var data = new FormData(form);
+        $.ajax({
+          data: data,
+          enctype: 'multipart/form-data',
+          url: "{{ route('validasi.data-valid') }}",
+          type: "POST", //karena simpan kita pakai method POST
+          // dataType: 'json', //data tipe kita kirim berupa JSON
+          processData: false,
+          contentType: false,
+          cache: false,
+          success: function(data) {
+            $('#addModalValidasi').modal('show');
+            $('#addModalValidasi').on('shown.bs.modal', function() {
+              var template = $(this).html();
+              $(this).html(template);
+              $('#addModalValidasi').find('.modal-body').html(data.table);
+            });
+          }
+        });
+      });
+
+      $('body').on('click','#tombol-simpan-validasi', function() {
+        $('#tombol-simpan-validasi').html('Loading...');
+        $.ajax({
+          data: {
+            konfirmasi: 'yes'
+          },
+          url: "{{ route('validasi.data-valid') }}",
+          type: "POST", //karena simpan kita pakai method POST
+          dataType: 'json', //data tipe kita kirim berupa JSON
+          // processData: false,
+          // contentType: false,
+          // cache: false,
+          success: function(data) {
+            if(data.kode == 200) {
+              $('#tombol-simpan-validasi').html('Konfirmasi'); //tombol simpan
+              $('#addModalValidasi').modal('hide');
+              $('#tombol-simpan').prop('disabled', false);
+            }
+          }
+        });
+      });
+
       if ($("#form-tambah-edit").length > 0) {
-            $("#form-tambah-edit").validate({
-                submitHandler: function (form) {
-                    var actionType = $('#tombol-simpan').val();
-                    var form = $('#form-tambah-edit')[0];
-                    var data = new FormData(form);
-                    $('#tombol-simpan').html('Sending..');
-                    $.ajax({
-                        // data: $('#form-tambah-edit').serialize(), 
-                        data: data,
-                        enctype: 'multipart/form-data',
-                        url: "{{ route('pasien.store') }}", //url simpan data
-                        type: "POST", //karena simpan kita pakai method POST
-                        // dataType: 'json', //data tipe kita kirim berupa JSON
-                        processData: false,
-                        contentType: false,
-                        cache: false,
-                        timeout: 600000,
-                        success: function (data) { //jika berhasil
-                            console.log(data);
-                            if(data.success == false) {
-                              Swal.fire({
-                                icon: 'error',
-                                title: 'Terjadi Kesalahan!',
-                                text: data.message,
-                              });
-                              $('#tombol-simpan').html('Simpan');
-                            } else {
-                              $('#form-tambah-edit').trigger("reset"); //form reset
-                              $('#tindakan_operasi_id').prop('disabled', true);
-                              $('#jenis_operasi_id').prop('disabled', true);
-                              $('#lama_operasi_id').prop('disabled', true);
-                              $('#asa_score_id').prop('disabled', true);
-                              $('#risk_score_id').prop('disabled', true);
-                              $('#tombol-simpan').html('Simpan'); //tombol simpan
-                              $('select').val("").trigger('change');
-                              iziToast.success({ //tampilkan iziToast dengan notif data berhasil disimpan pada posisi kanan bawah
-                                  title: 'Successfully',
-                                  message: 'Berhasil menambah data',
-                                  position: 'bottomRight'
-                              });
-                              location.reload();
-                            }
-                        },
-                        error: function (data) { //jika error tampilkan error pada console
-                            console.log('Error:', data);
-                            $('#tombol-simpan').html('Simpan');
-                        }
-                    });
+        $("#form-tambah-edit").validate({
+          submitHandler: function (form) {
+            var actionType = $('#tombol-simpan').val();
+            var form = $('#form-tambah-edit')[0];
+            var data = new FormData(form);
+            $('#tombol-simpan').html('Sending..');
+            $.ajax({
+                // data: $('#form-tambah-edit').serialize(), 
+                data: data,
+                enctype: 'multipart/form-data',
+                url: "{{ route('pasien.store') }}", //url simpan data
+                type: "POST", //karena simpan kita pakai method POST
+                // dataType: 'json', //data tipe kita kirim berupa JSON
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 600000,
+                success: function (data) { //jika berhasil
+                    console.log(data);
+                    if(data.success == false) {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Terjadi Kesalahan!',
+                        text: data.message,
+                      });
+                      $('#tombol-simpan').html('Simpan');
+                    } else {
+                      $('#form-tambah-edit').trigger("reset"); //form reset
+                      $('#tindakan_operasi_id').prop('disabled', true);
+                      $('#jenis_operasi_id').prop('disabled', true);
+                      $('#lama_operasi_id').prop('disabled', true);
+                      $('#asa_score_id').prop('disabled', true);
+                      $('#risk_score_id').prop('disabled', true);
+                      $('#tombol-simpan').html('Simpan'); //tombol simpan
+                      $('select').val("").trigger('change');
+                      iziToast.success({ //tampilkan iziToast dengan notif data berhasil disimpan pada posisi kanan bawah
+                          title: 'Successfully',
+                          message: 'Berhasil menambah data',
+                          position: 'bottomRight'
+                      });
+                      location.reload();
+                    }
+                },
+                error: function (data) { //jika error tampilkan error pada console
+                    console.log('Error:', data);
+                    $('#tombol-simpan').html('Simpan');
                 }
-            })
+            });
+          }
+        });
+        
       }
     });
 
     $(document).ready(function () {
-
       $('body').on('click', '#tombol-simpan-kategori', function() {
         Swal.fire({
           title: 'Apakah anda yakin ingin menyimpan data ini?',
@@ -559,12 +606,14 @@
 
     $('#is_operasi').change(function() {
       if(this.checked) {
+        $('#tgl_operasi').addClass('required').prop('disabled', false);
         $('#jenis_operasi_id').addClass('required').prop('disabled', false);
         $('#lama_operasi_id').addClass('required').prop('disabled', false);
         $('#asa_score_id').addClass('required').prop('disabled', false);
         $('#risk_score_id').addClass('required').prop('disabled', false);
         $('#tindakan_operasi_id').addClass('required').prop('disabled', false);
       } else {
+        $('#tgl_operasi').removeClass('required').prop('disabled', true);
         $('#jenis_operasi_id').removeClass('required').prop('disabled', true);
         $('#lama_operasi_id').removeClass('required').prop('disabled', true);
         $('#asa_score_id').removeClass('required').prop('disabled', true);
@@ -574,6 +623,13 @@
     });
 
     $('#jenis_infeksi_rs_vap').datetimepicker({
+      timepicker: false,
+      format: 'Y-m-d',
+      minDate: $('#tgl_masuk').val(),
+      mask: true
+    });
+
+    $('#tgl_operasi').datetimepicker({
       timepicker: false,
       format: 'Y-m-d',
       minDate: $('#tgl_masuk').val(),

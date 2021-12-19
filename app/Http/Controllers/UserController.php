@@ -26,19 +26,23 @@ class UserController extends Controller
                     ->addColumn('action', function($row){
                         $button = '<div class="btn-group btn-group-sm" role="group">';
                         $button .= '<button type="button" name="delete" id="'.$row->id.'" class="delete btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>';
-                        if($row->email_verified_at == null)
-                        {
-                            $button .= '<button type="button" name="verify" data-id="'.$row->id.'" id="'.$row->id.'" class="verify btn btn-success btn-sm"><i class="fas fa-check"></i></button>';
-                        }
                         $button .= '</div>';
-                        if($row->is_admin == 1)
+                        if($row->role == 1)
                         {
                             return 'User Admin';
                         } else {
                             return $button;
                         }
                     })
-                    ->rawColumns(['action'])
+                    ->editColumn('role', function($row) {
+                        if($row->role == 1) {
+                            return '<div class="badge badge-info">Admin</div>';
+                        } 
+                        if($row->role == 0) {
+                            return '<div class="badge badge-danger">User</div>';
+                        }
+                    })
+                    ->rawColumns(['action','role'])
                     ->make(true);
         }
 
@@ -49,14 +53,45 @@ class UserController extends Controller
     {
         $id = $request->id;
 
+        if($request->role == "-1") {
+            return response()->json([
+                'code' => 201,
+                'message' => 'Level belum dipilih!'
+            ], 201);
+        }
+
+        if($request->name == "" || $request->name == null) {
+            return response()->json([
+                'code' => 201,
+                'message' => 'Nama tidak boleh kosong!'
+            ], 201);
+        }
+
+        if($request->email == "" || $request->email == null) {
+            return response()->json([
+                'code' => 201,
+                'message' => 'Username tidak boleh kosong!'
+            ], 201);
+        }
+
+        if($request->password == "" || $request->password == null) {
+            return response()->json([
+                'code' => 201,
+                'message' => 'Password tidak boleh kosong!'
+            ], 201);
+        }
+        
         $user = User::updateOrCreate(['id' => $id],[
             'name' => $request->name,
-            'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $request->role,
         ]);
 
-        return response()->json($user);
+        return response()->json([
+            'code' => 200,
+            'data' => $user
+        ],200);
     }
 
     public function update($id)

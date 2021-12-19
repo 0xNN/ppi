@@ -11,9 +11,18 @@
       <div class="modal-body">
         <input type="hidden" name="id" id="id">
         <div class="row">
-          <div class="col-sm-12">
+          <div class="col-sm-6">
             <div class="form-group">
               <input type="text" name="name" id="name" class="form-control" placeholder="Nama">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <select class="form-control" name="role" id="role">
+                <option value="-1">-- PILIH LEVEL --</option>
+                <option value="1">Admin</option>
+                <option value="0">User</option>
+              </select>
             </div>
           </div>
         </div>

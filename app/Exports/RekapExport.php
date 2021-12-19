@@ -77,13 +77,13 @@ class RekapExport implements FromView, WithColumnWidths, WithEvents, ShouldAutoS
         foreach($model as $data) 
         {
             $ppi_detail = PasienPpi::join('pasien_ppi_details','pasien_ppi_details.pasien_ppi_id','pasien_ppis.id')
-                                            ->whereMonth('tgl_masuk', $this->bulan)
-                                            ->whereYear('tgl_masuk', $this->tahun)
+                                            ->whereMonth('tgl_sensus', $this->bulan)
+                                            ->whereYear('tgl_sensus', $this->tahun)
                                             ->get();
     
             $ppi_detail_distinct = PasienPpi::join('pasien_ppi_details','pasien_ppi_details.pasien_ppi_id','pasien_ppis.id')
-                                ->whereMonth('tgl_masuk', $this->bulan)
-                                ->whereYear('tgl_masuk', $this->tahun)
+                                ->whereMonth('tgl_sensus', $this->bulan)
+                                ->whereYear('tgl_sensus', $this->tahun)
                                 ->groupBy('no_rm')
                                 ->get();
     

@@ -53,7 +53,7 @@
               @csrf
               <div class="card-header bg-white border-0">
                 <h3>Data Rekap HAIs</h3>
-                <small class="font-italic text-danger"><b>Note: </b> Rekap Filter berdasarkan tahun!</small>
+                <small class="font-italic text-danger"><b>Note: </b> Rekap Filter berdasarkan tahun! (Berdasarkan Input Tanggal Sensus)</small>
               </div>
               <div class="card-body">
                 <div class="row">

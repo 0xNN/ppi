@@ -66,6 +66,12 @@ Route::group(['middleware' => 'auth'], function() {
 		Route::get('/data/{id}',[App\Http\Controllers\PasienFromOtherDbController::class, 'get_detail_with_id'])->name('detail-with-id');
 	});
 
+	Route::prefix('validasi')->name('validasi.')->group(function() {
+		Route::post('/data-valid', [App\Http\Controllers\PasienFromOtherDbController::class, 'data_valid'])->name('data-valid');
+	});
+
+	Route::resource('data-ppi', App\Http\Controllers\PasienPpiController::class);
+
 	Route::prefix('master')->name('master.')->group(function () {
 		
 		Route::prefix('charts')->name('charts.')->group(function () {

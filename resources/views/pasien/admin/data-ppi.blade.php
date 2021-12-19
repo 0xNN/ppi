@@ -35,6 +35,10 @@
             </div>
           </div>
           <div class="form-group">
+            <label for="tgl_operasi">Tanggal Operasi</label>
+            <input type="text" id="tgl_operasi" name="tgl_operasi" class="form-control form-control-sm" disabled>
+          </div>
+          <div class="form-group">
             <label for="tindakan_operasi_id">Tindakan Operasi</label>
             <select name="tindakan_operasi_id" id="tindakan_operasi_id" class="form-control form-control-sm" disabled></select>
           </div>
@@ -206,6 +210,7 @@
             </table>
           </div>
           <div class="form-group">
+            <button type="button" class="btn btn-sm btn-info" id="validasi-simpan" value="validasi"><i class="fas fa-info"></i> Validasi</button>
             <button type="submit" class="btn btn-sm btn-success" id="tombol-simpan" value="create"><i class="fas fa-save"></i> Simpan</button>
           </div>
         </div>
