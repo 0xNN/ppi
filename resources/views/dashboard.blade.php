@@ -310,23 +310,6 @@
                                     </div>
                                 </div>
                             </div>
-                            {{-- <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="form-group">
-                                        <label>Range Bulan</label>
-                                        <div class="input-group input-group-sm">
-                                            <div class="input-group-prepend">
-                                                <div class="input-group-text">Dari</div>
-                                            </div>
-                                            <input type="text" id="from_date" name="from_date" class="form-control" readonly>
-                                            <div class="input-group-prepend">
-                                                <div class="input-group-text">Sampai</div>
-                                            </div>
-                                            <input type="text" id="to_date" name="to_date" class="form-control form-control-sm" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> --}}
                             {{-- {!! $chartHais->container() !!} --}}
                         </div>
                         <div class="card-footer">
@@ -347,6 +330,64 @@
                     </div>
                 </div>
             </div> --}}
+        </div>
+        <div class="row mt-2">
+            <div class="col-xl-12 col-md-12 col-sm-12">
+                <div class="card shadow">
+                    <form method="post" action="{{ route('statistik.index') }}">
+                        @csrf
+                        <div class="card-header">
+                            Statistik Capaian (Bulanan)
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>Statistik Bulanan</label>
+                                        <div class="input-group input-group-sm">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">Filter</div>
+                                            </div>
+                                            <select name="filter" id="filter" class="form-control" readonly>
+                                                <option value="-1">-- PILIH --</option>
+                                                <option value="3">3 BULAN</option>
+                                                <option value="6">6 BULAN</option>
+                                            </select>
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">Tahun</div>
+                                            </div>
+                                            <input type="text" id="tahun_filter" name="tahun_filter" class="form-control" readonly>
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">Mulai Bulan</div>
+                                            </div>
+                                            <select id="mulai_bulan" name="mulai_bulan" class="form-control" readonly>
+                                                <option value="-1">-- PILIH --</option>
+                                                <option value="1">Januari</option>
+                                                <option value="2">Februari</option>
+                                                <option value="3">Maret</option>
+                                                <option value="4">April</option>
+                                                <option value="5">Mei</option>
+                                                <option value="6">Juni</option>
+                                                <option value="7">Juli</option>
+                                                <option value="8">Agustus</option>
+                                                <option value="9">September</option>
+                                                <option value="10">Oktober</option>
+                                                <option value="11">November</option>
+                                                <option value="12">Desember</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="d-sm-inline-block btn btn-sm btn-success shadow-sm" id="tombol-rekap">
+                                Submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
         @endif
         @include('layouts.footers.auth')
@@ -370,20 +411,7 @@
     {!! $chartJenisOperasi->script() !!} --}}
     <script>
         $('#tahun').yearpicker();
-
-        $('#tahun').change(function() {
-            $.ajax({
-                type: "GET",
-                url: "{{ route('home') }}",
-                data: {
-                    'tahun': $(this).val()
-                },
-                success: function(data) {
-                    console.log(data.tahun);
-                },
-                dataType: "JSON"
-            });
-        });
+        $('#tahun_filter').yearpicker();
 
         jQuery(function(){
             jQuery('#from_date').datetimepicker({
